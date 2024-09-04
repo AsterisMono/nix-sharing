@@ -179,14 +179,6 @@ result = vj9c8dm21k27xzbsaiy4j1zm6scb5nxk-nodejs-20.15.1
 
 ---
 
-Every **build output** in Nix is a `Derivation`!
-
-```
-vj9c8dm21k27xzbsaiy4j1zm6scb5nxk-nodejs-20.15.1
-```
-
----
-
 😄
 
 ```bash
@@ -197,6 +189,22 @@ $ cd result && pwd
 
 $ /nix/store/vj9c8dm21k27xzbsaiy4j1zm6scb5nxk-nodejs-20.15.1/bin/node -v
 v20.15.1
+```
+
+---
+
+Every **build output** in Nix is a `Derivation`!
+
+```
+vj9c8dm21k27xzbsaiy4j1zm6scb5nxk-nodejs-20.15.1
+```
+
+---
+
+🪄: Run software **without installing**
+
+```
+$ nix-shell -p cowsay
 ```
 
 ---
@@ -237,6 +245,10 @@ $f(\text{packages}) \rightarrow \text{environment}$
 
 ---
 
+```
+mkPackage = { source, dependency }: <Package>;
+```
+👇
 ```nix
 mkEnvironment = { packages }: <Environment>;
 ```
@@ -269,7 +281,8 @@ v9.0.2142
 ```
 
 ---
-
+disabled: true
+---
 Every **build output** in Nix is a `Derivation`!
 
 ```bash
@@ -397,6 +410,23 @@ $ git commit -m "feat: xxx" # gitconfig ✅
 
 ---
 
+<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; margin-left: 30px;">
+  <img style="margin-bottom: 10px; margin-right: 16px;" src="https://devenv.sh/assets/logo.webp" alt="drawing" width="350"/> <span>×</span> <img src="./logo.png" width="420" >
+</div>
+
+```bash
+$ git clone https://github.com/frontonly/xycatalog-server
+
+$ direnv allow
+
+$ devenv up
+
+$ pnpm run test # 🥳
+```
+
+---
+disabled: true
+---
 Every **build output** in Nix is a `Derivation`
 ```nix
 let
@@ -410,8 +440,249 @@ in
 ```
 
 Even... 👀
----
-
-### NixOS <img style="float: right; margin-left: 16px" src="https://search.nixos.org/images/nix-logo.png" alt="drawing" width="88"/>
 
 ---
+
+📦💻🤔
+
+---
+
+### nix-darwin <img style="float: right; margin-left: 16px" src="https://camo.githubusercontent.com/72a8cc4dd5e3137b74db5fd82e693d3481934ee408620d5a75d9c302c4907f15/68747470733a2f2f646169646572642e636f6d2f6e69782d64617277696e2f696d616765732f6e69782d64617277696e2e706e67" alt="drawing" width="88"/>
+
+*Declarative configuration for your MacOS devices*
+
+---
+
+```nix
+defaults = {
+  menuExtraClock.Show24Hour = true; # 24小时时钟
+
+  dock = {
+    autohide = true;      # 自动隐藏Dock
+    show-recents = false; # 不显示最近运行的程序
+    tilesize = 56;        # 图标大小
+    mineffect = "scale";  # 缩放效果
+  };
+
+  universalaccess.reduceMotion = true; # 减少动画效果
+
+  NSGlobalDomain = {
+    ApplePressAndHoldEnabled = false; # 启用重复键
+    KeyRepeat = 2;                    # 设置键重复速度
+    InitialKeyRepeat = 25;
+  };
+};
+
+```
+
+---
+
+```nix
+homebrew = {
+  enable = true;
+
+  masApps = {
+    TencentMeeting = 1484048379;
+    Wechat = 836500024;
+    NeteaseCloudMusic = 944848654;
+    QQ = 451108668;
+  };
+
+  casks = [
+    "visual-studio-code"
+    "cursor"
+    "google-chrome"
+    ...
+  ];
+}
+```
+
+---
+
+😎🍎
+
+```bash
+$ darwin-rebuild switch --flake .
+
+building the system configuration...
+restarting Dock...
+setting up user launchd services...
+Homebrew bundle...
+Starting Home Manager activation
+...
+```
+
+---
+
+### home-manager <img style="float: right; margin-left: 16px" src="https://avatars.githubusercontent.com/u/33221035?s=200&v=4" alt="drawing" width="88"/>
+
+*Declarative configuration for your `/home`*
+
+---
+
+```nix
+programs.fish = {
+  enable = true;
+  plugins = [
+    {
+      name = "plugin-git";
+      inherit (pkgs.fishPlugins.plugin-git) src;
+    }
+  ];
+  shellAliases = {
+    ".." = "cd ../";
+    "n" = "nvim";
+    "ls" = "eza -l";
+  };
+};
+```
+
+---
+
+```nix
+# Neovim
+programs.neovim = {
+  enable = true;
+  defaultEditor = true;
+  vimAlias = true;
+};
+
+xdg.configFile.nvim.source = flake.inputs.nvim-config;
+```
+
+---
+
+```nix
+programs.git = {
+  enable = true;
+  userName = "Chatnoir Miki";
+  userEmail = "cmiki@amono.me";
+  extraConfig = {
+    init.defaultBranch = "main";
+    pull.rebase = true;
+  };
+};
+```
+
+---
+
+```nix
+programs.firefox = {
+  policies = {
+    ExtensionSettings = {                  # 自动安装这些扩展
+      "uBlock0@raymondhill.net" = {
+        install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+        installation_mode = "force_installed";
+        default_area = "menupanel";
+      };
+    };
+  };
+  DisplayBookmarksToolbar = "never";       # 不显示书签栏
+  DisablePocket = true;                    # 关闭 Pocket
+  Homepage.StartPage = "previous-session"; # 继续上一次浏览的位置
+  profiles.default = {
+    search.default = "Google";             # 默认谷歌搜索
+  };
+};
+```
+
+---
+
+```nix
+programs.vscode = {
+  enable = true;
+  extensions = with pkgs.vscode-extensions; [
+    dracula-theme.theme-dracula
+    vscodevim.vim
+    yzhang.markdown-all-in-one
+  ];
+};
+```
+
+---
+
+😏
+
+---
+
+### <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/NixOS_logo.svg/1600px-NixOS_logo.svg.png?20200523080210" alt="drawing" width="400"/>
+
+ *Declarative configuration for your **systems***
+
+---
+
+💻 Desktop config
+
+```nix
+{
+  services.clashMeta = {
+    enable = true;
+    tunMode = true;
+    configFile = "${secrets}/clashConfig.yaml";
+  };
+
+  fonts = {
+    fontDir.enable = true;
+    packages = with pkgs; [
+      (nerdfonts.override {
+        fonts = [ "FiraCode" "Hack" "JetBrainsMono" "UbuntuMono" ];
+      })
+    ];
+  };
+
+  virtualisation.docker.enable = true;
+}
+```
+
+---
+
+🖥 Server config
+
+```nix
+{
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = false;
+    settings.KbdInteractiveAuthentication = false;
+    settings.PermitRootLogin = "without-password";
+  };
+
+  networking.firewall.enable = true;
+
+  config.services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "postgres" ];
+  };
+}
+```
+
+---
+
+### <img src="https://github.com/serokell/deploy-rs/raw/master/docs/logo.svg" alt="drawing" width="400"/>
+
+*Multi-profile magical remote deployments*
+
+---
+
+```nix
+deploy.nodes = {
+  celestia = {
+    hostname = "celestia";
+    profiles.system = {
+      user = "root";
+      path = activate.nixos self.nixosConfigurations.celestia;
+    };
+  };
+  aqua = { ... };
+};
+```
+
+---
+
+Get ❄️ [here](https://determinate.systems/posts/graphical-nix-installer/).
+
+---
+
+More ❄️ at [@nix_resources](https://linktr.ee/nix_resources)
+
+Also checkout my [flake](https://github.com/AsterisMono/flake)!
