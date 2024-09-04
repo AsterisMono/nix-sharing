@@ -658,11 +658,7 @@ programs.vscode = {
 
 ---
 
-### <img src="https://github.com/serokell/deploy-rs/raw/master/docs/logo.svg" alt="drawing" width="400"/>
-
-*Multi-profile magical remote deployments*
-
----
+### <img src="https://github.com/serokell/deploy-rs/raw/master/docs/logo.svg" alt="drawing" width="300"/>
 
 ```nix
 deploy.nodes = {
@@ -679,7 +675,11 @@ deploy.nodes = {
 
 ---
 
-Get ❄️ [here](https://determinate.systems/posts/graphical-nix-installer/).
+#### Declarative.<br />Deterministic.<br/>Reproducible.
+
+---
+
+#### Get ❄️ [here](https://determinate.systems/posts/graphical-nix-installer/).
 
 ---
 
